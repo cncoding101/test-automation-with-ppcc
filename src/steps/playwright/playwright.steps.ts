@@ -1,5 +1,5 @@
-import { ICustomWorld } from '../../support/custom-world';
-import { config } from '../../support/config';
+import { ICustomWorld } from '@/support/custom-world';
+import { config } from '@/support/config';
 import { Given, When, Then } from '@cucumber/cucumber';
 import expect from 'expect';
 

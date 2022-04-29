@@ -1,26 +1,15 @@
 import { ICustomWorld } from './custom-world';
 import { config } from './config';
 import { Before, After, BeforeAll, AfterAll, Status, setDefaultTimeout } from '@cucumber/cucumber';
-import {
-  chromium,
-  ChromiumBrowser,
-  firefox,
-  FirefoxBrowser,
-  webkit,
-  WebKitBrowser,
-} from 'playwright';
+import { chromium, firefox, webkit } from 'playwright';
 import { ITestCaseHookParameter } from '@cucumber/cucumber/lib/support_code_library_builder/types';
+import { auth, base } from '@/utils/const';
+import { browserType } from '@/utils/types';
+import generateStates from '@/utils/helper/generate-auth-states';
 // import { ensureDir } from 'fs-extra';
 import axios from 'axios';
 
-let browser: ChromiumBrowser | FirefoxBrowser | WebKitBrowser;
-// const tracesDir = 'traces';
-
-// declare global {
-//   // eslint-disable-next-line no-var
-//   var browser: ChromiumBrowser | FirefoxBrowser | WebKitBrowser;
-// }
-
+let browser: browserType;
 setDefaultTimeout(process.env.PWDEBUG ? -1 : 60 * 1000);
 
 BeforeAll(async function () {
@@ -34,7 +23,21 @@ BeforeAll(async function () {
     default:
       browser = await chromium.launch(config.browserOptions);
   }
-  // await ensureDir(tracesDir);
+
+  // store login states
+  const keys = Object.keys(base.urls);
+  for (let i = 0; i < keys.length; i++) {
+    switch (keys[i]) {
+      case base.urlTypes.base: {
+        break;
+      }
+
+      case base.urlTypes.olfstaging: {
+        await generateStates(browser, auth.authTypes.sellers, base.urlTypes.olfstaging);
+        break;
+      }
+    }
+  }
 });
 
 Before({ tags: '@ignore' }, async function () {
@@ -46,29 +49,40 @@ Before({ tags: '@debug' }, async function (this: ICustomWorld) {
   this.debug = true;
 });
 
+// these tags represent logins globally
+Before({ tags: '@sellers' }, async function (this: ICustomWorld) {
+  this.storageStateName = auth.authTypes.sellers;
+});
+
+Before({ tags: '@1' }, async function (this: ICustomWorld) {
+  this.storageStateName = `${this.storageStateName}-1`;
+});
+
+Before({ tags: '@olfstaging' }, async function (this: ICustomWorld) {
+  this.storageStateName = `${this.storageStateName}.${base.urlTypes.olfstaging}`;
+});
+
 Before(async function (this: ICustomWorld, { pickle }: ITestCaseHookParameter) {
-  // console.log({ this: this, pickle });
   this.startTime = new Date();
   this.testName = pickle.name.replace(/\W/g, '-');
-  // console.log({ testname: this.testName });
   // customize the [browser context](https://playwright.dev/docs/next/api/class-browser#browsernewcontextoptions)
   this.context = await browser.newContext({
     acceptDownloads: true,
     recordVideo: process.env.PWVIDEO ? { dir: 'screenshots' } : undefined,
     viewport: { width: 1200, height: 800 },
+    storageState: 'storage/sellers-1.olfstaging.json',
+    // this.storageStateName !== undefined ? `storage/${this.storageStateName}.json` : undefined,
   });
+
   this.server = axios.create();
   this.server.defaults.baseURL = config.api;
   this.server.defaults.headers.post = {
     'Content-Type': 'application/json',
   };
   this.server.interceptors.response.use((res) => res.data);
-  // use login and set authorization if needed
-  // this.server.defaults.headers.common.Authorization = 'Bearer ' + token;
+  // use login and set authorization if needed to access api
+  // this.server.defaults.headers.common.Authorization = ;
 
-  // console.log({ server: this.server });
-
-  // await this.context.tracing.start({ screenshots: true, snapshots: true });
   this.page = await this.context.newPage();
   // watches for console calls from the page
   this.page.on('console', async (msg) => {
@@ -79,6 +93,12 @@ Before(async function (this: ICustomWorld, { pickle }: ITestCaseHookParameter) {
   this.feature = pickle;
 });
 
+// add before tags to perform page interactions that will be used globally
+Before({ tags: '@olfstaging' }, async function (this: ICustomWorld) {
+  const page = this.page!;
+  await page.goto(`${config.urls.olfstaging}`);
+});
+
 After(async function (this: ICustomWorld, { result }: ITestCaseHookParameter) {
   if (result) {
     await this.attach(`Status: ${result?.status}. Duration:${result.duration?.seconds}s`);
@@ -87,11 +107,6 @@ After(async function (this: ICustomWorld, { result }: ITestCaseHookParameter) {
     if (result.status !== Status.PASSED) {
       const image = await this.page?.screenshot();
       image && (await this.attach(image, 'image/png'));
-      // await this.context?.tracing.stop({
-      //   path: `${tracesDir}/${this.testName}-${
-      //     this.startTime?.toISOString().split('.')[0]
-      //   }trace.zip`,
-      // });
     }
   }
   await this.page?.close();

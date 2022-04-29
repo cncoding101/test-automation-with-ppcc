@@ -1,5 +1,5 @@
-import { config } from '../../support/config';
-import { ICustomWorld } from '../../support/custom-world';
+import { config } from '@/support/config';
+import { ICustomWorld } from '@/support/custom-world';
 import { ensureFile, pathExists } from 'fs-extra';
 import pixelmatch from 'pixelmatch';
 import { PNG } from 'pngjs';
