@@ -1,5 +1,5 @@
-import { LaunchOptions } from 'playwright';
 import { base } from '@/utils/const';
+import { LaunchOptions } from 'playwright';
 
 const browserOptions: LaunchOptions = {
   slowMo: 0,

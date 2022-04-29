@@ -1,11 +1,11 @@
 import { ICustomWorld } from './custom-world';
 import { config } from './config';
-import { Before, After, BeforeAll, AfterAll, Status, setDefaultTimeout } from '@cucumber/cucumber';
-import { chromium, firefox, webkit } from 'playwright';
-import { ITestCaseHookParameter } from '@cucumber/cucumber/lib/support_code_library_builder/types';
 import { auth, base } from '@/utils/const';
 import { browserType } from '@/utils/types';
 import generateStates from '@/utils/helper/generate-auth-states';
+import { Before, After, BeforeAll, AfterAll, Status, setDefaultTimeout } from '@cucumber/cucumber';
+import { chromium, firefox, webkit } from 'playwright';
+import { ITestCaseHookParameter } from '@cucumber/cucumber/lib/support_code_library_builder/types';
 // import { ensureDir } from 'fs-extra';
 import axios from 'axios';
 

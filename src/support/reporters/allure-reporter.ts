@@ -1,6 +1,7 @@
+import { IFormatterOptions } from '@cucumber/cucumber';
 import { AllureRuntime, CucumberJSAllureFormatter } from 'allure-cucumberjs8';
 
-function Reporter(options: any) {
+function Reporter(options: IFormatterOptions) {
   return new CucumberJSAllureFormatter(
     options,
     new AllureRuntime({ resultsDir: './reports/allure-results' }),
