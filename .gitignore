@@ -1,5 +1,7 @@
 test-results/
 playwright-report/
+dist/
+
 
 .DS_Store
 .idea/
@@ -14,7 +16,7 @@ test-results.html
 test-results.html.json
 
 # Runtime data
-pids
+pids/
 *.pid
 *.seed
 *.pid.lock
@@ -65,7 +67,15 @@ typings/
 # dotenv environment variables file
 .env
 
+#storage
+/storage
+
+#reports
+/reports
+
+#codegen
+/codegen
+
 #build
 build
-dist/
 docs/

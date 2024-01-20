@@ -1,0 +1,16 @@
+{
+  "mongodb": [
+    {
+      "data": [{}],
+      "table": "users",
+      "database": "olf-local"
+    }
+  ],
+  "postgresdb": [
+    {
+      "data": [{}],
+      "database": "orders",
+      "table": "trigger_orders"
+    }
+  ]
+}

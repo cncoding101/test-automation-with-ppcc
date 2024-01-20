@@ -28,13 +28,6 @@
   },
   "plugins": ["@typescript-eslint", "prettier", "import"],
   "rules": {
-    "indent": [
-      "error",
-      2,
-      {
-        "SwitchCase": 1
-      }
-    ],
     "no-debugger": ["error"],
     "no-multiple-empty-lines": [
       "error",
@@ -51,7 +44,8 @@
       }
     ],
     "@typescript-eslint/explicit-function-return-type": "off",
-    "@typescript-eslint/no-non-null-assertion": "off"
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "@typescript-eslint/no-explicit-any": "off"
   },
   "settings": {
     "import/resolver": {

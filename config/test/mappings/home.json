@@ -1,0 +1,13 @@
+{
+  "contacts header": "[data-id='contacts']",
+  "create": "[data-id='add-button']",
+  "full name label": "[data-id='full-name-label']",
+  "name": "[data-id='name']",
+  "gender label": "[data-id='gender-label']",
+  "address label": "[data-id='address-label']",
+  "address": "[data-id='address']",
+  "edit": "[data-id='edit-button']",
+  "delete": "[data-id='delete-button']",
+  "playground": "[data-id='playground-button']",
+  "contact": "[data-id='contact']"
+}

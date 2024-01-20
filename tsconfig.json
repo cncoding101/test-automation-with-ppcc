@@ -1,15 +1,16 @@
 {
   "compilerOptions": {
     "baseUrl": "./src",
-    "target": "es6" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,
+    "target": "esnext" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,
     "module": "commonjs" /* Specify what module code is generated. */,
     "outDir": "dist" /* Specify an output folder for all emitted files. */,
     "rootDir": ".",
     "useUnknownInCatchVariables": false,
     "paths": {
-      "@/steps/*": ["steps/*"],
-      "@/support/*": ["support/*"],
-      "@/utils/*": ["utils/*"]
+      "@step-definitions/*": ["step-definitions/*"],
+      "@support/*": ["support/*"],
+      "@config/*": ["config/*"],
+      "@utils/*": ["utils/*"]
     },
     "allowJs": true,
     "esModuleInterop": true /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables `allowSyntheticDefaultImports` for type compatibility. */,
@@ -20,6 +21,6 @@
   "ts-node": {
     "require": ["tsconfig-paths/register"]
   },
-  "include": ["./src/**/*.ts"],
+  "include": ["./src/**/*.ts", "environment.d.ts"],
   "exclude": ["node_modules", "dist", "__tests__", "coverage"]
 }

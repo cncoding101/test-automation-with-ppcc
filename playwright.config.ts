@@ -1,19 +1,13 @@
-import type { PlaywrightTestConfig } from '@playwright/test';
-import { devices } from '@playwright/test';
-
-/**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
-// require('dotenv').config();
+import env from './src/config/environment';
+import { defineConfig, devices } from '@playwright/test';
 
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
-const config: PlaywrightTestConfig = {
+export default defineConfig({
   testDir: './codegen',
   /* Maximum time one test can run for. */
-  timeout: 10 * 1000,
+  timeout: env.TIMEOUT / 2,
   // caching the auth state
   expect: {
     /**
@@ -23,22 +17,26 @@ const config: PlaywrightTestConfig = {
     timeout: 5000,
   },
   /* Fail the build on CI if you accidentally left test.only in the source code. */
-  forbidOnly: !!process.env.CI,
+  forbidOnly: !!env.CI,
   /* Retry on CI only */
-  retries: process.env.CI ? 2 : 0,
+  retries: env.CI ? 2 : 0,
   /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : undefined,
+  workers: env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: [['html', { outputFolder: 'reports/playwright-reports' }]],
+  reporter: [['html', { outputFolder: './reports/playwright-reports' }]],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
     actionTimeout: 0,
+    acceptDownloads: true,
+    viewport: { width: 1200, height: 800 },
+    ignoreHTTPSErrors: true, // bypass unsafe connections
     /* Base URL to use in actions like `await page.goto('/')`. */
     // baseURL: 'http://localhost:3000',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
+    navigationTimeout: env.TIMEOUT / 4,
   },
 
   /* Configure projects for major browsers */
@@ -101,6 +99,4 @@ const config: PlaywrightTestConfig = {
   //   command: 'npm run start',
   //   port: 3000,
   // },
-};
-
-export default config;
+});
